@@ -1,152 +1,208 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { movieData } from '../mock-data/movies';
+import { Flip } from 'gsap/dist/Flip';
+import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
+import Footer from '@/components/Footer';
+import { movieData } from '../mock-data/moviesDataMock';
 
 const Home = () => {
-  const init = () => {
-    const setInnerText = (els, arr) => {
-      document.querySelectorAll(els).forEach((item, i) => {
-        item.innerText = `${arr[i]}`;
-      });
-    };
-
-    // Set primary data elements (pictures, text)
-    document.querySelectorAll('.poster').forEach((item, i) => {
-      gsap.set(item, { backgroundImage: `url(${movieData.pictures[i]})` });
-    });
-
-    setInnerText('.movie-card .grade', movieData.gradeArr);
-    setInnerText('.movie-card .movie-title', movieData.titles);
-    setInnerText('.movie-card .tags', movieData.tagArr);
-
-    gsap.set(this.backArrow, {
-      opacity: 0,
-      x: '-10%',
-      rotate: 180
-    });
-
-    // Populate scroll timeline wih the movie cards animation.
-    for (let i = 0; i < this.cards.length - 1; i++) {
-      if (i !== this.cards.length - 2) {
-        this.passCardTween(
-          this.cards[i],
-          this.cards[i + 1],
-          this.infos[i],
-          this.infos[i + 1],
-          this.labels[i],
-          0.85
-        );
-      } else if (i === 0) {
-        this.passCardTween(
-          this.cards[i],
-          this.cards[i + 1],
-          this.infos[i],
-          this.infos[i + 1],
-          this.labels[i],
-          0.85
-        );
-      } else if (i === 3) {
-        this.passCardTween(
-          this.cards[i],
-          this.cards[i + 1],
-          this.infos[i],
-          this.infos[i + 1],
-          this.labels[i],
-          0.875
-        );
-      } else {
-        this.passCardTween(
-          this.cards[i],
-          this.cards[i + 1],
-          this.infos[i],
-          this.infos[i + 1],
-          this.labels[i],
-          0.775
-        );
-        this.scrollTl.addLabel('end');
-      }
-    }
-
-    // Create trigger to link the scroll timeline directly to the scrollbar (scrub).
-    const trigger = ScrollTrigger.create({
-      horizontal: true,
-      scroller: this.scroller,
-      animation: this.scrollTl,
-      scrub: true,
-      start: 0,
-      end: () => `+=${ScrollTrigger.maxScroll(this.scroller, true)}`,
-      snap: {
-        snapTo: 'labels',
-        duration: 0.2
-      }
-    });
-    // Handles synchronisation of scrolling animation on resize.
-    let progress = 0;
-    ScrollTrigger.addEventListener('refreshInit', () => (progress = trigger.progress));
-    ScrollTrigger.addEventListener('refresh', () => {
-      trigger.scroll(progress * ScrollTrigger.maxScroll(this.scroller, true));
-    });
-
-    // Create a trigger for every movie card to handle active state.
-    this.cards.forEach((card, i) => {
-      const index = this.cards.indexOf(card);
-      const st = ScrollTrigger.create({
-        horizontal: true,
-        scroller: '#card-gallery',
-        start: '0 80%',
-        end: '0 0',
-        trigger: card,
-        toggleClass: 'active'
-      });
-    });
-
-    // Set middle tab navigation to the second option (details).
-    gsap.set('#nav-layer', { x: '105%' });
-
-    // Call event handler functions.
-    this.inputFunc();
-    this.handleClicks();
-  };
-
-  useEffect(() => {
-    // Scale up the first movie card and hide all primary infos but the one of the active first card.
-    gsap.set('.movie-card', { scale: 0.85 });
-    gsap.set('.movie-card.one', { scale: 1 });
-    gsap.set('.movie-info', { opacity: 0 });
-    gsap.set('.movie-card.one .movie-info', { opacity: 1 });
-  }, []);
+  if (typeof window !== 'undefined') {
+    gsap.registerPlugin(Flip, ScrollToPlugin, ScrollTrigger);
+  }
 
   const fixedLayer = useRef();
   const dataList = useRef();
+  const backArrow = useRef();
+  const scroller = useRef();
+  const navLayer = useRef();
+  const progress = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [trailerIndex, setTrailerIndex] = useState(null);
+  const labels = useMemo(() => ['start', 'two', 'three', 'four', 'five', 'end'], []);
+
+  const scrollTl = useMemo(
+    () =>
+      gsap
+        .timeline({
+          defaults: {
+            ease: 'none'
+          }
+        })
+        .pause(),
+    []
+  );
+
+  /**
+   * Shorthand function to populate the scroll timeline.
+   * @param el
+   * @param el2
+   * @param el3
+   * @param el4
+   * @param label
+   * @param duration
+   */
+  const passCardTween = useCallback(
+    (el, el2, el3, el4, label, duration) => {
+      scrollTl
+        .addLabel(label)
+        .to(el, {
+          scale: 0.85,
+          duration
+        })
+        .to(
+          el2,
+          {
+            scale: 1,
+            duration
+          },
+          `>-${duration}`
+        )
+        .to(el3, { opacity: 0, duration }, `>-${duration}`)
+        .to(el4, { opacity: 1, duration }, `>-${duration}`);
+    },
+    [scrollTl]
+  );
+
+  // const init = () => {
+  //   const setInnerText = (els, arr) => {
+  //     document.querySelectorAll(els).forEach((item, i) => {
+  //       item.innerText = `${arr[i]}`;
+  //     });
+  //   };
+  //
+  //   // Call event handler functions.
+  //   this.inputFunc();
+  //   this.handleClicks();
+  // };
+
+  useEffect(() => {
+    if (navLayer.current) {
+      // Set middle tab navigation to the second option (details).
+      gsap.set(navLayer.current, { x: '105%' });
+    }
+  }, []);
+
+  /**
+   * Set Movie cards animations
+   */
+  useEffect(() => {
+    if (scroller.current) {
+      // Scale up the first movie card and hide all primary infos but the one of the active first card.
+      gsap.set('.movie-card', { scale: 0.85 });
+      gsap.set('.movie-card.one', { scale: 1 });
+      gsap.set('.movie-info', { opacity: 0 });
+      gsap.set('.movie-card.one .movie-info', { opacity: 1 });
+
+      const cards = Array.from(document.querySelectorAll('.movie-card'));
+      const infos = Array.from(document.querySelectorAll('.movie-info'));
+
+      // Populate scroll timeline wih the movie cards animation.
+      for (let i = 0; i < cards.length - 1; i += 1) {
+        if (i !== cards.length - 2) {
+          passCardTween(cards[i], cards[i + 1], infos[i], infos[i + 1], labels[i], 0.85);
+        } else if (i === 0) {
+          passCardTween(cards[i], cards[i + 1], infos[i], infos[i + 1], labels[i], 0.85);
+        } else if (i === 3) {
+          passCardTween(cards[i], cards[i + 1], infos[i], infos[i + 1], labels[i], 0.875);
+        } else {
+          passCardTween(cards[i], cards[i + 1], infos[i], infos[i + 1], labels[i], 0.775);
+
+          scrollTl.addLabel('end');
+        }
+      }
+
+      // Create trigger to link the scroll timeline directly to the scrollbar (scrub).
+      const trigger = ScrollTrigger.create({
+        horizontal: true,
+        scroller: scroller.current,
+        animation: scrollTl,
+        scrub: true,
+        start: 0,
+        end: () => `+=${ScrollTrigger.maxScroll(scroller.current, true)}`,
+        snap: {
+          snapTo: 'labels',
+          duration: 0.2
+        }
+      });
+
+      // Handles synchronisation of scrolling animation on resize.
+      // let progress = 0;
+      const refreshInit = () => {
+        progress.current = trigger.progress;
+      };
+
+      const refresh = () => {
+        trigger.scroll(progress.current * ScrollTrigger.maxScroll(scroller.current, true));
+      };
+      ScrollTrigger.addEventListener('refreshInit', refreshInit);
+      ScrollTrigger.addEventListener('refresh', refresh);
+
+      // Create a trigger for every movie card to handle active state.
+      cards.forEach(card => {
+        // const index = cards.indexOf(card);
+        const st = ScrollTrigger.create({
+          horizontal: true,
+          scroller: '#card-gallery',
+          start: '0 80%',
+          end: '0 0',
+          trigger: card,
+          toggleClass: 'active'
+        });
+      });
+    }
+
+    // TODO: fix this
+    // return () => {
+    //   ScrollTrigger.removeEventListener('refreshInit', refreshInit);
+    //   ScrollTrigger.removeEventListener('refresh', refresh);
+    // };
+  }, [labels, passCardTween, scrollTl]);
+
+  /**
+   * Set backArrow animation
+   */
+  useEffect(() => {
+    if (backArrow.current) {
+      gsap.set(backArrow.current, {
+        opacity: 0,
+        x: '-10%',
+        rotate: 180
+      });
+    }
+  }, []);
 
   // Main UI controller object to handle dynamic scrolling, animation to detailed view and data injection.
-  const dynamicScroll = {
-    cssBody: document.body.style,
-    // fixedLayer: document.querySelector('#fixed-layer'),
-    // dataList: document.querySelector('#movies'),
-    searchField: document.querySelector('#searchbar > input'),
-    searchButton: document.querySelector('#search-icon'),
-    scroller: document.querySelector('#card-gallery'),
-    bigInfo: document.querySelector('.big-movie-info'),
-    movieCopy: document.querySelector('#movie-copy p'),
-    backArrow: document.querySelector('#fixed-layer > .back-arrow'),
-    cards: Array.from(document.querySelectorAll('.movie-card')),
-    posters: Array.from(document.querySelectorAll('.movie-card .poster')),
-    links: Array.from(document.querySelectorAll('.movie-card a')),
-    infos: Array.from(document.querySelectorAll('.movie-info')),
-    midNavLinks: Array.from(document.querySelectorAll('#mid-nav a')),
-    castItems: Array.from(document.querySelectorAll('.reel.cast .item')),
-    trailerItems: Array.from(document.querySelectorAll('.reel.trailer .item')),
-    activeIndex: null,
-    trailerIndex: null,
-    labels: ['start', 'two', 'three', 'four', 'five', 'end']
-  };
+  // const dynamicScroll = {
+  //   cssBody: document.body.style,
+  //   // fixedLayer: document.querySelector('#fixed-layer'),
+  //   // dataList: document.querySelector('#movies'),
+  //   searchField: document.querySelector('#searchbar > input'),
+  //   searchButton: document.querySelector('#search-icon'),
+  //   // scroller: document.querySelector('#card-gallery'),
+  //   bigInfo: document.querySelector('.big-movie-info'),
+  //   movieCopy: document.querySelector('#movie-copy p'),
+  //   // backArrow: document.querySelector('#fixed-layer > .back-arrow'),
+  //   // cards: Array.from(document.querySelectorAll('.movie-card')),
+  //   posters: Array.from(document.querySelectorAll('.movie-card .poster')),
+  //   links: Array.from(document.querySelectorAll('.movie-card a')),
+  //   // infos: Array.from(document.querySelectorAll('.movie-info')),
+  //   midNavLinks: Array.from(document.querySelectorAll('#mid-nav a')),
+  //   castItems: Array.from(document.querySelectorAll('.reel.cast .item')),
+  //   trailerItems: Array.from(document.querySelectorAll('.reel.trailer .item'))
+  //   // activeIndex: null,
+  //   // trailerIndex: null,
+  //   // labels: ['start', 'two', 'three', 'four', 'five', 'end']
+  // };
 
   // Initiate clock, bottom navigation and scroll animation.
   // dynamicClock.init();
-  footerNav.init();
-  dynamicScroll.init();
+  // footerNav.init();
+
+  const convertIndexToWord = index => {
+    const words = ['one', 'two', 'three', 'four', 'five', 'six'];
+    return words[index];
+  };
 
   return (
     <section id="phone">
@@ -213,7 +269,7 @@ const Home = () => {
           <article id="search">
             <div id="searchbar">
               <input list="movies" placeholder="Search" />
-              <button id="search-icon">
+              <button type="button" id="search-icon">
                 <svg id="vector" viewBox="0 0 30.239 30.239">
                   <g id="glass" fill="#B4BFFD">
                     <path
@@ -229,169 +285,44 @@ const Home = () => {
             </div>
 
             <datalist id="movies" ref={dataList}>
-              {movieData && movieData.titles.map(title => <option value={title}>{title}</option>)}
+              {movieData &&
+                movieData.map(movie => (
+                  <option key={movie.title} value={movie.title}>
+                    {movie.title}
+                  </option>
+                ))}
             </datalist>
           </article>
         </header>
 
         <main>
           <h3>Now Playing</h3>
-          <article id="card-gallery">
-            <div className="movie-card one">
-              <div className="poster" />
-              <article className="movie-info">
-                <div className="imdb">
-                  <div className="logo">IMDb</div>
-                  <div className="grade" />
-                </div>
-                <h4 className="movie-title" />
-                <article className="tags" />
-              </article>
-              <a href="#" />
-            </div>
+          <article id="card-gallery" ref={scroller}>
+            {movieData.map((movie, index) => (
+              <div key={movie.title} className={`movie-card ${convertIndexToWord(index)}`}>
+                <div className="poster" style={{ backgroundImage: `url(${movie.picture})` }} />
+                <article className="movie-info">
+                  <div className="imdb">
+                    <div className="logo">IMDb</div>
+                    <div className="grade">{movie.grade}</div>
+                  </div>
+                  <h4 className="movie-title">{movie.title}</h4>
+                  <article className="tags">{movie.tags}</article>
+                </article>
+                <a href="#" />
+              </div>
+            ))}
 
-            <div id="test" className="movie-card two">
-              <div className="poster" />
-              <article className="movie-info">
-                <div className="imdb">
-                  <div className="logo">IMDb</div>
-                  <div className="grade" />
-                </div>
-                <h4 className="movie-title" />
-                <article className="tags" />
-              </article>
-              <a href="#" />
-            </div>
-            <div className="movie-card three">
-              <div className="poster" />
-              <article className="movie-info">
-                <div className="imdb">
-                  <div className="logo">IMDb</div>
-                  <div className="grade" />
-                </div>
-                <h4 className="movie-title" />
-                <article className="tags" />
-              </article>
-              <a href="#" />
-            </div>
-            <div className="movie-card four">
-              <div className="poster" />
-              <article className="movie-info">
-                <div className="imdb">
-                  <div className="logo">IMDb</div>
-                  <div className="grade" />
-                </div>
-                <h4 className="movie-title" />
-                <article className="tags" />
-              </article>
-              <a href="#" />
-            </div>
-            <div className="movie-card five">
-              <div className="poster" />
-              <article className="movie-info">
-                <div className="imdb">
-                  <div className="logo">IMDb</div>
-                  <div className="grade" />
-                </div>
-                <h4 className="movie-title" />
-                <article className="tags" />
-              </article>
-              <a href="#" />
-            </div>
-            <div className="movie-card six">
-              <div className="poster" />
-              <article className="movie-info">
-                <div className="imdb">
-                  <div className="logo">IMDb</div>
-                  <div className="grade" />
-                </div>
-                <h4 className="movie-title" />
-                <article className="tags" />
-              </article>
-              <a href="#" />
-            </div>
             <div id="spacer" />
           </article>
         </main>
 
-        <footer>
-          <nav>
-            <ul>
-              <li>
-                <a href="#">
-                  <svg viewBox="0 0 192 192">
-                    <path
-                      className="icon"
-                      fill="#627d8b"
-                      d="m155.109 74.028a4 4 0 0 0 -3.48-2.028h-52.4l8.785-67.123a4.023 4.023 0 0 0 -7.373-2.614l-63.724
-    111.642a4 4 0 0 0 3.407 6.095h51.617l-6.962 67.224a4.024 4.024 0 0 0 7.411 2.461l62.671-111.63a4 4 0 0 0
-    .048-4.027z"
-                    />
-                  </svg>
-                  <h4>Trending</h4>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <svg viewBox="0 0 58 58">
-                    <path
-                      className="icon"
-                      fill="#627d8b"
-                      d="M57,6H1C0.448,6,0,6.447,0,7v44c0,0.553,0.448,1,1,1h56c0.552,0,1-0.447,1-1V7C58,6.447,57.552,6,57,6z M10,50H2v-9h8V50z
-	 M10,39H2v-9h8V39z M10,28H2v-9h8V28z M10,17H2V8h8V17z M36.537,29.844l-11,7C25.374,36.947,25.187,37,25,37
-	c-0.166,0-0.331-0.041-0.481-0.123C24.199,36.701,24,36.365,24,36V22c0-0.365,0.199-0.701,0.519-0.877
-	c0.32-0.175,0.71-0.162,1.019,0.033l11,7C36.825,28.34,37,28.658,37,29S36.825,29.66,36.537,29.844z M56,50h-8v-9h8V50z M56,39h-8
-	v-9h8V39z M56,28h-8v-9h8V28z M56,17h-8V8h8V17z"
-                    />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <svg viewBox="0 0 8.5 8.5">
-                    <path
-                      fill="rgba(0,0,0,0.4)"
-                      d="M 0.0599 5.3151 A 0.2646 0.2646 0 0 0 0.0775 5.6703 L 0.8068 6.3996 A 0.2646 0.2646 0 0 0 1.1799 6.3993
-    L 1.2807 6.2984 C 1.5297 6.0494 1.9182 6.0494 2.1672 6.2984 C 2.4162 6.5474 2.4162 6.9359 2.1672 7.1849 L 2.0664
-    7.2858 A 0.2646 0.2646 0 0 0 2.0675 7.6603 L 2.7954 8.3882 A 0.2646 0.2646 0 0 0 3.1699 8.3893 L 4.7525 6.8067
-    L 1.6604 3.7146 L 0.0778 5.2972 A 0.2646 0.2646 0 0 0 0.0599 5.3151 Z"
-                    />
-                    <path
-                      className="icon"
-                      fill="#627d8b"
-                      d="M 2.0346 3.3405 L 5.1267 6.4325 L 8.3886
-    3.1705 A 0.2646 0.2646 0 0 0 8.3886 2.7949 L 7.6608 2.067 A 0.2646 0.2646 0 0 0 7.2851 2.067 L 7.1846 2.1675
-    C 6.9356 2.4165 6.5468 2.4169 6.2978 2.1679 C 6.0488 1.9189 6.0491 1.53 6.2982 1.281 L 6.3986 1.1805 A 0.2646
-    0.2646 0 0 0 6.4001 0.8063 L 5.6708 0.077 A 0.2646 0.2646 0 0 0 5.2966 0.0785 Z Z Z"
-                    />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <svg viewBox="0 0 100 100">
-                    <path
-                      fill="rgba(0,0,0,0.4)"
-                      d="M76.31,5H34.8a5.16,5.16,0,0,0-5.11,5.21v.34H70.76a5.16,5.16,0,0,1,5.1,5.21V83.66a5.15,5.15,0,0,0,
-    5.55-5.19V10.24A5.15,5.15,0,0,0,76.31,5Z"
-                    />
-                    <path
-                      className="icon"
-                      fill="#627d8b"
-                      d="M65.2,16.13H23.69a5.15,5.15,0,0,0-5.1,5.21V89.77a5.1,5.1,0,0,0,8,4.28L41.93,83.22a5,5,0,0,1,5.88,
-    0L62.23,93.81a5.11,5.11,0,0,0,8.08-4.24V21.34A5.16,5.16,0,0,0,65.2,16.13Z"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </footer>
+        <Footer />
 
         {/* Second layer for expanded card with details, cast and trailer gallery */}
         <article id="first-layer">
           <div className="big-poster" />
-          <button className="close-card">
+          <button type="button" className="close-card">
             <svg viewBox="0 0 100 100">
               <g transform="translate(0,-952.36218)">
                 <path
@@ -433,7 +364,8 @@ const Home = () => {
               <a className="two" href="#">
                 DETAILS
               </a>
-              <div id="nav-layer" />
+
+              <div id="nav-layer" ref={navLayer} />
               <svg>
                 <rect
                   id="text-bg"
@@ -541,7 +473,7 @@ const Home = () => {
         </article>
 
         <article id="fixed-layer" ref={fixedLayer}>
-          <button className="back-arrow">
+          <button type="button" ref={backArrow} className="back-arrow">
             <svg viewBox="0 0 512 512">
               <path
                 fill="white"

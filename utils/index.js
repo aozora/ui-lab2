@@ -42,14 +42,14 @@ import { movieData } from '../mock-data/movies';
  * Create and pause the timeline for movie cards animation.
  * @returns {gsap.core.Timeline}
  */
-export const scrollTl = () =>
-  gsap
-    .timeline({
-      defaults: {
-        ease: 'none'
-      }
-    })
-    .pause();
+// export const scrollTl = () =>
+//   gsap
+//     .timeline({
+//       defaults: {
+//         ease: 'none'
+//       }
+//     })
+//     .pause();
 
 /**
  * Shorthand function to scroll to a specific movie-card.
@@ -174,34 +174,6 @@ export const inputFunc = () => {
       this.inputNav(target);
     }
   });
-};
-
-/**
- * Shorthand function to populate the scroll timeline.
- * @param el
- * @param el2
- * @param el3
- * @param el4
- * @param label
- * @param duration
- */
-export const passCardTween = (el, el2, el3, el4, label, duration) => {
-  this.scrollTl
-    .addLabel(label)
-    .to(el, {
-      scale: 0.85,
-      duration
-    })
-    .to(
-      el2,
-      {
-        scale: 1,
-        duration
-      },
-      `>-${duration}`
-    )
-    .to(el3, { opacity: 0, duration }, `>-${duration}`)
-    .to(el4, { opacity: 1, duration }, `>-${duration}`);
 };
 
 /**
