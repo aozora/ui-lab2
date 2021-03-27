@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Footer = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <footer>
       <nav>
         <ul>
           <li>
-            <a href="#">
+            <button
+              type="button"
+              onClick={() => setActiveIndex(0)}
+              className={activeIndex === 0 ? 'active' : ''}
+            >
               <svg viewBox="0 0 192 192">
                 <path
                   className="icon"
@@ -17,10 +23,14 @@ const Footer = () => {
                 />
               </svg>
               <h4>Trending</h4>
-            </a>
+            </button>
           </li>
           <li>
-            <a href="#">
+            <button
+              type="button"
+              onClick={() => setActiveIndex(1)}
+              className={activeIndex === 1 ? 'active' : ''}
+            >
               <svg viewBox="0 0 58 58">
                 <path
                   className="icon"
@@ -32,10 +42,14 @@ const Footer = () => {
 	v-9h8V39z M56,28h-8v-9h8V28z M56,17h-8V8h8V17z"
                 />
               </svg>
-            </a>
+            </button>
           </li>
           <li>
-            <a href="#">
+            <button
+              type="button"
+              onClick={() => setActiveIndex(2)}
+              className={activeIndex === 2 ? 'active' : ''}
+            >
               <svg viewBox="0 0 8.5 8.5">
                 <path
                   fill="rgba(0,0,0,0.4)"
@@ -53,10 +67,14 @@ const Footer = () => {
     0.2646 0 0 0 6.4001 0.8063 L 5.6708 0.077 A 0.2646 0.2646 0 0 0 5.2966 0.0785 Z Z Z"
                 />
               </svg>
-            </a>
+            </button>
           </li>
           <li>
-            <a href="#">
+            <button
+              type="button"
+              onClick={() => setActiveIndex(3)}
+              className={activeIndex === 3 ? 'active' : ''}
+            >
               <svg viewBox="0 0 100 100">
                 <path
                   fill="rgba(0,0,0,0.4)"
@@ -70,7 +88,7 @@ const Footer = () => {
     0L62.23,93.81a5.11,5.11,0,0,0,8.08-4.24V21.34A5.16,5.16,0,0,0,65.2,16.13Z"
                 />
               </svg>
-            </a>
+            </button>
           </li>
         </ul>
       </nav>

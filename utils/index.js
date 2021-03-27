@@ -1,6 +1,5 @@
 import gsap from 'gsap';
 import { Flip } from 'gsap/dist/Flip';
-import { movieData } from '../mock-data/movies';
 
 /**
  * Clock object to handle display of time (European time, not much customization here).
@@ -37,19 +36,6 @@ import { movieData } from '../mock-data/movies';
 //     }, 1000);
 //   }
 // };
-
-/**
- * Create and pause the timeline for movie cards animation.
- * @returns {gsap.core.Timeline}
- */
-// export const scrollTl = () =>
-//   gsap
-//     .timeline({
-//       defaults: {
-//         ease: 'none'
-//       }
-//     })
-//     .pause();
 
 /**
  * Shorthand function to scroll to a specific movie-card.
@@ -155,25 +141,6 @@ export const inputNav = (cards, tar) => {
         break;
     }
   }
-};
-
-/**
- * Add non-click event listeners (and styling) specific to the input search (focus, enter key) to call the input shorthand function to scroll to the selected movie.
- */
-export const inputFunc = () => {
-  this.searchField.addEventListener('focus', () => {
-    gsap.set('#searchbar', { boxShadow: '0 0 0 1px var(--brand-c)' });
-  });
-  this.searchField.addEventListener('blur', () => {
-    gsap.set('#searchbar', { boxShadow: '' });
-  });
-
-  this.searchField.addEventListener('keydown', e => {
-    if (e.keyCode === 13) {
-      const target = this.searchField.value;
-      this.inputNav(target);
-    }
-  });
 };
 
 /**

@@ -4,7 +4,10 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { Flip } from 'gsap/dist/Flip';
 import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import Footer from '@/components/Footer';
+import Search from '@/components/Search';
 import { movieData } from '../mock-data/moviesDataMock';
+
+const labels = ['start', 'two', 'three', 'four', 'five', 'end'];
 
 const Home = () => {
   if (typeof window !== 'undefined') {
@@ -12,15 +15,17 @@ const Home = () => {
   }
 
   const fixedLayer = useRef();
-  const dataList = useRef();
   const backArrow = useRef();
   const scroller = useRef();
   const navLayer = useRef();
   const progress = useRef(0);
   const [activeIndex, setActiveIndex] = useState(null);
   const [trailerIndex, setTrailerIndex] = useState(null);
-  const labels = useMemo(() => ['start', 'two', 'three', 'four', 'five', 'end'], []);
 
+  /**
+   * Create and pause the timeline for movie cards animation.
+   * @returns {gsap.core.Timeline}
+   */
   const scrollTl = useMemo(
     () =>
       gsap
@@ -127,7 +132,6 @@ const Home = () => {
       });
 
       // Handles synchronisation of scrolling animation on resize.
-      // let progress = 0;
       const refreshInit = () => {
         progress.current = trigger.progress;
       };
@@ -172,32 +176,8 @@ const Home = () => {
     }
   }, []);
 
-  // Main UI controller object to handle dynamic scrolling, animation to detailed view and data injection.
-  // const dynamicScroll = {
-  //   cssBody: document.body.style,
-  //   // fixedLayer: document.querySelector('#fixed-layer'),
-  //   // dataList: document.querySelector('#movies'),
-  //   searchField: document.querySelector('#searchbar > input'),
-  //   searchButton: document.querySelector('#search-icon'),
-  //   // scroller: document.querySelector('#card-gallery'),
-  //   bigInfo: document.querySelector('.big-movie-info'),
-  //   movieCopy: document.querySelector('#movie-copy p'),
-  //   // backArrow: document.querySelector('#fixed-layer > .back-arrow'),
-  //   // cards: Array.from(document.querySelectorAll('.movie-card')),
-  //   posters: Array.from(document.querySelectorAll('.movie-card .poster')),
-  //   links: Array.from(document.querySelectorAll('.movie-card a')),
-  //   // infos: Array.from(document.querySelectorAll('.movie-info')),
-  //   midNavLinks: Array.from(document.querySelectorAll('#mid-nav a')),
-  //   castItems: Array.from(document.querySelectorAll('.reel.cast .item')),
-  //   trailerItems: Array.from(document.querySelectorAll('.reel.trailer .item'))
-  //   // activeIndex: null,
-  //   // trailerIndex: null,
-  //   // labels: ['start', 'two', 'three', 'four', 'five', 'end']
-  // };
-
   // Initiate clock, bottom navigation and scroll animation.
   // dynamicClock.init();
-  // footerNav.init();
 
   const convertIndexToWord = index => {
     const words = ['one', 'two', 'three', 'four', 'five', 'six'];
@@ -266,33 +246,7 @@ const Home = () => {
             </article>
           </article>
 
-          <article id="search">
-            <div id="searchbar">
-              <input list="movies" placeholder="Search" />
-              <button type="button" id="search-icon">
-                <svg id="vector" viewBox="0 0 30.239 30.239">
-                  <g id="glass" fill="#B4BFFD">
-                    <path
-                      d="M20.194,3.46c-4.613-4.613-12.121-4.613-16.734,0c-4.612,4.614-4.612,12.121,0,16.735
-		c4.108,4.107,10.506,4.547,15.116,1.34c0.097,0.459,0.319,0.897,0.676,1.254l6.718,6.718c0.979,0.977,2.561,0.977,3.535,0
-		c0.978-0.978,0.978-2.56,0-3.535l-6.718-6.72c-0.355-0.354-0.794-0.577-1.253-0.674C24.743,13.967,24.303,7.57,20.194,3.46z
-		 M18.073,18.074c-3.444,3.444-9.049,3.444-12.492,0c-3.442-3.444-3.442-9.048,0-12.492c3.443-3.443,9.048-3.443,12.492,0
-		C21.517,9.026,21.517,14.63,18.073,18.074z"
-                    />
-                  </g>
-                </svg>
-              </button>
-            </div>
-
-            <datalist id="movies" ref={dataList}>
-              {movieData &&
-                movieData.map(movie => (
-                  <option key={movie.title} value={movie.title}>
-                    {movie.title}
-                  </option>
-                ))}
-            </datalist>
-          </article>
+          <Search />
         </header>
 
         <main>
