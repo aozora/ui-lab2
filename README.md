@@ -1,3 +1,9 @@
+# UI Lab 2
+
+This is a React port of this CodePen:
+[Movie app "Gsap Flip & ScrollTrigger" - Dribble shot by Shakuro Graphics](https://codepen.io/smoothdev35/pen/rNMxPwQ)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

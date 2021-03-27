@@ -1,22 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 
 a {
   text-decoration: none;
@@ -51,13 +40,10 @@ body {
     height: 546px;
     margin: auto;
     position: relative;
-    transform: scale (
-      1.1
-    );
+    transform: scale(1.1);
     overflow: hidden;
 
-    &
-    ::after {
+    &::after {
       content: '';
       width: 100%;
       height: 100%;
@@ -98,8 +84,7 @@ body {
         scrollbar-width: none;
         overflow: -moz-scrollbars-none;
 
-        &
-        ::-webkit-scrollbar {
+        &::-webkit-scrollbar {
           width: 0 !important;
           display: none;
         }
@@ -282,16 +267,14 @@ body {
             scrollbar-width: none;
             overflow: -moz-scrollbars-none;
 
-            &
-            ::-webkit-scrollbar {
+            &::-webkit-scrollbar {
               width: 0 !important;
               display: none;
             }
 
           }
 
-          &
-          .left {
+          &.left {
             display: grid;
             left: 0;
             grid-template-columns: 100%;
@@ -334,8 +317,7 @@ body {
 
               .reel {
 
-                &
-                .cast {
+                &.cast {
 
                   .item {
 
@@ -391,8 +373,7 @@ body {
 
               .reel {
 
-                &
-                .trailer {
+                &.trailer {
                   height: 100px;
 
                   .item {
@@ -407,8 +388,7 @@ body {
                       background-position: center;
                       border-radius: 10px;
 
-                      &
-                      ::after {
+                      &::after {
                         content: '';
                         width: 35px;
                         height: 35px;
@@ -425,11 +405,9 @@ body {
                         transition: opacity 0.1s linear;
                       }
 
-                      &
-                      .open {
+                      &.open {
 
-                        &
-                        ::after {
+                        &::after {
                           opacity: 0;
                         }
 
@@ -441,8 +419,7 @@ body {
             }
           }
 
-          &
-          .right {
+          &.right {
             left: 100%;
             grid-template-columns: 100%;
             grid-auto-rows: min-content;
@@ -456,14 +433,13 @@ body {
         }
       }
 
-      &
-      .two {
+      &.two {
         position: fixed;
         opacity: 0.3;
       }
 
       header {
-        grid-area: 'header';
+        grid-area: header;
         opacity: var(--layer-zero-opacity);
         transition: opacity 0.2s linear;
 
@@ -484,8 +460,7 @@ body {
             width: 21%;
             height: 100%;
 
-            &
-            .left {
+            &.left {
 
               #clock {
                 font-size: 10px;
@@ -493,8 +468,7 @@ body {
 
             }
 
-            &
-            .right {
+            &.right {
 
               div {
                 width: 12px;
@@ -510,8 +484,7 @@ body {
                   inset: 0;
                 }
 
-                &
-                :nth-of-type(1) {
+                &:nth-of-type(1) {
 
                   svg {
                     transform: scale(2);
@@ -537,8 +510,7 @@ body {
             border-radius: 5px;
             transition: box-shadow 0.1s linear;
 
-            &
-            :hover {
+            &:hover {
               box-shadow: 0 0 0 1px var(--light-brand-c);
             }
 
@@ -554,8 +526,7 @@ body {
               border-top-left-radius: 5px;
               border-bottom-left-radius: 5px;
 
-              &
-              ::placeholder {
+              &::placeholder {
                 font-size: 14px;
                 color: var(--brand-grey);
                 opacity: 1;
@@ -593,7 +564,7 @@ body {
       }
 
       main {
-        grid-area: 'main';
+        grid-area: main;
         display: flex;
         flex-flow: column nowrap;
         justify-content: space-evenly;
@@ -616,8 +587,7 @@ body {
           scrollbar-width: none;
           overflow: -moz-scrollbars-none;
 
-          &
-          ::-webkit-scrollbar {
+          &::-webkit-scrollbar {
             width: 0 !important;
             display: none;
           }
@@ -704,33 +674,27 @@ body {
 
             }
 
-            &
-            .one {
+            &.one {
               left: 8%;
             }
 
-            &
-            .two {
+            &.two {
               left: 82.5%;
             }
 
-            &
-            .three {
+            &.three {
               left: 157.5%;
             }
 
-            &
-            .four {
+            &.four {
               left: 232.5%;
             }
 
-            &
-            .five {
+            &.five {
               left: 307.5%;
             }
 
-            &
-            .six {
+            &.six {
               left: 382.5%;
             }
 
@@ -751,8 +715,7 @@ body {
 
         .video-thumb {
 
-          &
-          ::after {
+          &::after {
             content: '';
             width: 100%;
             height: 100%;
@@ -767,11 +730,9 @@ body {
             pointer-events: none;
           }
 
-          &
-          .active {
+          &.active {
 
-            &
-            ::after {
+            &::after {
               opacity: 1;
             }
 
@@ -783,13 +744,11 @@ body {
             background: #000;
             object-fit: cover;
 
-            &
-            :focus {
+            &:focus {
               outline: 0;
             }
 
-            &
-            ::-webkit-media-controls-fullscreen-button {
+            &::-webkit-media-controls-fullscreen-button {
               display: none;
             }
 
@@ -837,15 +796,13 @@ body {
               height: 22px;
               transform: translatey(-40%);
 
-              &
-              :nth-of-type(1) {
+              &:nth-of-type(1) {
                 width: 30%;
 
                 a {
                   justify-content: space-between;
 
-                  &
-                  .active {
+                  &.active {
 
                     h4 {
                       color: var(--brand-c);
@@ -874,8 +831,7 @@ body {
                 width: 100%;
                 height: 100%;
 
-                &
-                .active {
+                &.active {
 
                   svg {
 
