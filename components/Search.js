@@ -2,14 +2,14 @@ import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { movieData } from '../mock-data/moviesDataMock';
 
-const Search = () => {
+const Search = ({ onNavigateToSelectedMovie }) => {
   const dataList = useRef();
   const onFocus = () => gsap.set('#searchbar', { boxShadow: '0 0 0 1px var(--brand-c)' });
   const onBlur = () => gsap.set('#searchbar', { boxShadow: '' });
   const onKeydown = e => {
     if (e.keyCode === 13) {
       // const target = this.searchField.value;
-      // this.inputNav(target);
+      onNavigateToSelectedMovie(e.target.value);
     }
   };
 

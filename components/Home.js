@@ -5,7 +5,9 @@ import { Flip } from 'gsap/dist/Flip';
 import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import Footer from '@/components/Footer';
 import Search from '@/components/Search';
+import TopIcons from '@/components/TopIcons';
 import { movieData } from '../mock-data/moviesDataMock';
+import { scrollFunc } from '../utils';
 
 const labels = ['start', 'two', 'three', 'four', 'five', 'end'];
 
@@ -184,73 +186,92 @@ const Home = () => {
     return words[index];
   };
 
+  const navigateToSelectedMovie = tar => {
+    const target = tar;
+    // Index of active movie card.
+    // const activeIndex = cards.indexOf(document.querySelector('.movie-card.active'));
+
+    // Index of the selected movie card
+    const movieIndex = movieData.findIndex(movie => movie.title === target);
+    let diff;
+    const cards = Array.from(document.querySelectorAll('.movie-card'));
+
+    if (movieIndex > activeIndex) {
+      // Check index difference in forwards direction (right scrolling).
+      const diff = movieIndex - activeIndex;
+      // Adapt scrolling speed and offset to navigate between one or several movie cards.
+      switch (diff) {
+        case 1:
+          movieIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], 0, 0.16)
+            : scrollFunc(cards[movieIndex], 54, 0.2);
+          break;
+        case 2:
+          movieIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], 0, 0.36)
+            : scrollFunc(cards[movieIndex], 72, 0.4);
+          break;
+        case 3:
+          movieIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], 0, 0.56)
+            : scrollFunc(cards[movieIndex], 90, 0.6);
+          break;
+        case 4:
+          movieIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], 0, 0.76)
+            : scrollFunc(cards[movieIndex], 108, 0.8);
+          break;
+        case 5:
+          movieIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], 0, 0.96)
+            : scrollFunc(cards[movieIndex], 126, 1);
+          break;
+      }
+    } else if (movieIndex < activeIndex) {
+      // Check index difference in backwards direction (left scrolling).
+      diff = activeIndex - movieIndex;
+      // Adapt scrolling speed and offset to navigate between one or several movie cards.
+      switch (diff) {
+        case 1:
+          activeIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], 18, 0.16)
+            : scrollFunc(cards[movieIndex], 16, 0.2);
+          break;
+        case 2:
+          activeIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], 0, 0.36)
+            : scrollFunc(cards[movieIndex], -2, 0.4);
+          break;
+        case 3:
+          activeIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], -18, 0.56)
+            : scrollFunc(cards[movieIndex], -20, 0.6);
+          break;
+        case 4:
+          activeIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], -36, 0.76)
+            : scrollFunc(cards[movieIndex], -38, 0.8);
+          break;
+        case 5:
+          activeIndex === cards.length - 1
+            ? scrollFunc(cards[movieIndex], -54, 0.96)
+            : scrollFunc(cards[movieIndex], -56, 1);
+          break;
+      }
+    }
+  };
+
   return (
     <section id="phone">
       <article id="screen">
         <header>
-          <article id="top-icons">
-            <article className="topbar left">
-              <div id="" />
-            </article>
-            <article className="topbar right">
-              <div>
-                <svg viewBox="0 0 100 100">
-                  <path
-                    d="M28.984,67.871h3.282c1.262,0,2.288-1.026,2.288-2.288v-7.012c0-1.262-1.026-2.288-2.288-2.288h-3.282
-        c-1.261,0-2.288,1.026-2.288,2.288v7.012C26.697,66.844,27.723,67.871,28.984,67.871z"
-                  />
-                  <path
-                    d="M38.678,67.871h3.257c1.269,0,2.3-1.032,2.3-2.3V52.49c0-1.269-1.032-2.3-2.3-2.3h-3.257c-1.269,0-2.3,
-        1.032-2.3,2.3V65.57 C36.377,66.839,37.409,67.871,38.678,67.871z"
-                  />
-                  <path
-                    d="M48.362,67.871h3.25c1.271,0,2.304-1.033,2.304-2.304V46.47c0-1.271-1.033-2.304-2.304-2.304h-3.25
-        c-1.271,0-2.304,1.034-2.304,2.304v19.097C46.059,66.837,47.092,67.871,48.362,67.871z"
-                  />
-                  <path
-                    d="M58.035,67.871h3.266c1.266,0,2.296-1.03,2.296-2.295V40.462c0-1.266-1.03-2.296-2.296-2.296h-3.266
-        c-1.266,0-2.296,1.03-2.296,2.296v25.113C55.739,66.841,56.769,67.871,58.035,67.871z"
-                  />
-                  <path
-                    d="M67.775,67.871h3.148c1.302,0,2.362-1.06,2.362-2.362V34.491c0-1.302-1.06-2.362-2.362-2.362h-3.148
-        c-1.302,0-2.362,1.06-2.362,2.362v31.018C65.413,66.811,66.473,67.871,67.775,67.871z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <svg viewBox="0 0 470 470">
-                  <path d="M170.667,336.6l64,64l64-64C263.36,301.293,205.973,301.293,170.667,336.6z" />
-                  <path
-                    d="M85.333,251.267L128,293.933c58.88-58.88,154.453-58.88,213.333,0L384,251.267
-				C301.547,168.813,167.787,168.813,85.333,251.267z"
-                  />
-                  <path
-                    d="M0,165.933L42.667,208.6c106.027-106.027,277.973-106.027,384,0l42.667-42.667C339.733,36.333,
-			129.6,36.333,0,165.933z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <svg viewBox="0 0 77 30">
-                  <g>
-                    <rect x="3.83" y="3.83" width="64.63" height="25.35" rx="1.63" ry="1.63" />
-                    <path
-                      d="M74.49,9.79H72.3V5.46A5.47,5.47,0,0,0,66.83,0H5.47A5.47,5.47,0,0,0,0,5.46V27.56A5.47,5.47,0,0,0,
-            5.47,33H66.83a5.47,5.47,0,0,0,5.46-5.46V23h2.19a2.67,2.67,0,0,0,2.67-2.67V12.46A2.67,2.67,0,0,0,74.49,
-            9.79ZM70.3,27.56A3.47,3.47,0,0,1,66.83,31H5.47A3.47,3.47,0,0,1,2,27.56V5.46A3.47,3.47,0,0,1,5.47,
-            2H66.83A3.47,3.47,0,0,1,70.3,5.46Zm4.87-7.25a.67.67,0,0,1-.67.67H72.3V11.79h2.19a.68.68,0,0,1,.67.67Z"
-                    />
-                  </g>
-                </svg>
-              </div>
-            </article>
-          </article>
-
-          <Search />
+          <TopIcons />
+          <Search onNavigateToSelectedMovie={navigateToSelectedMovie()} />
         </header>
 
         <main>
           <h3>Now Playing</h3>
+
           <article id="card-gallery" ref={scroller}>
             {movieData.map((movie, index) => (
               <div key={movie.title} className={`movie-card ${convertIndexToWord(index)}`}>

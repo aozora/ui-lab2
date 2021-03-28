@@ -68,80 +68,80 @@ export const fadeAll = (prop, val) => {
  * @param cards
  * @param tar
  */
-export const inputNav = (cards, tar) => {
-  const target = tar;
-  // Index of active movie card.
-  // const activeIndex = this.cards.indexOf(document.querySelector('.movie-card.active'));
-  const activeIndex = cards.indexOf(document.querySelector('.movie-card.active'));
-
-  // Index of the selected movie card
-  const movieIndex = movieData.titles.indexOf(target);
-  let diff;
-
-  if (movieIndex > activeIndex) {
-    // Check index difference in forwards direction (right scrolling).
-    diff = movieIndex - activeIndex;
-    // Adapt scrolling speed and offset to navigate between one or several movie cards.
-    switch (diff) {
-      case 1:
-        movieIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], 0, 0.16)
-          : scrollFunc(this.cards[movieIndex], 54, 0.2);
-        break;
-      case 2:
-        movieIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], 0, 0.36)
-          : scrollFunc(this.cards[movieIndex], 72, 0.4);
-        break;
-      case 3:
-        movieIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], 0, 0.56)
-          : scrollFunc(this.cards[movieIndex], 90, 0.6);
-        break;
-      case 4:
-        movieIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], 0, 0.76)
-          : scrollFunc(this.cards[movieIndex], 108, 0.8);
-        break;
-      case 5:
-        movieIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], 0, 0.96)
-          : scrollFunc(this.cards[movieIndex], 126, 1);
-        break;
-    }
-  } else if (movieIndex < activeIndex) {
-    // Check index difference in backwards direction (left scrolling).
-    diff = activeIndex - movieIndex;
-    // Adapt scrolling speed and offset to navigate between one or several movie cards.
-    switch (diff) {
-      case 1:
-        activeIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], 18, 0.16)
-          : scrollFunc(this.cards[movieIndex], 16, 0.2);
-        break;
-      case 2:
-        activeIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], 0, 0.36)
-          : scrollFunc(this.cards[movieIndex], -2, 0.4);
-        break;
-      case 3:
-        activeIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], -18, 0.56)
-          : scrollFunc(this.cards[movieIndex], -20, 0.6);
-        break;
-      case 4:
-        activeIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], -36, 0.76)
-          : scrollFunc(this.cards[movieIndex], -38, 0.8);
-        break;
-      case 5:
-        activeIndex === this.cards.length - 1
-          ? scrollFunc(this.cards[movieIndex], -54, 0.96)
-          : scrollFunc(this.cards[movieIndex], -56, 1);
-        break;
-    }
-  }
-};
+// export const inputNav = (cards, tar) => {
+//   const target = tar;
+//   // Index of active movie card.
+//   // const activeIndex = this.cards.indexOf(document.querySelector('.movie-card.active'));
+//   const activeIndex = cards.indexOf(document.querySelector('.movie-card.active'));
+//
+//   // Index of the selected movie card
+//   const movieIndex = movieData.titles.indexOf(target);
+//   let diff;
+//
+//   if (movieIndex > activeIndex) {
+//     // Check index difference in forwards direction (right scrolling).
+//     diff = movieIndex - activeIndex;
+//     // Adapt scrolling speed and offset to navigate between one or several movie cards.
+//     switch (diff) {
+//       case 1:
+//         movieIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], 0, 0.16)
+//           : scrollFunc(this.cards[movieIndex], 54, 0.2);
+//         break;
+//       case 2:
+//         movieIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], 0, 0.36)
+//           : scrollFunc(this.cards[movieIndex], 72, 0.4);
+//         break;
+//       case 3:
+//         movieIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], 0, 0.56)
+//           : scrollFunc(this.cards[movieIndex], 90, 0.6);
+//         break;
+//       case 4:
+//         movieIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], 0, 0.76)
+//           : scrollFunc(this.cards[movieIndex], 108, 0.8);
+//         break;
+//       case 5:
+//         movieIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], 0, 0.96)
+//           : scrollFunc(this.cards[movieIndex], 126, 1);
+//         break;
+//     }
+//   } else if (movieIndex < activeIndex) {
+//     // Check index difference in backwards direction (left scrolling).
+//     diff = activeIndex - movieIndex;
+//     // Adapt scrolling speed and offset to navigate between one or several movie cards.
+//     switch (diff) {
+//       case 1:
+//         activeIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], 18, 0.16)
+//           : scrollFunc(this.cards[movieIndex], 16, 0.2);
+//         break;
+//       case 2:
+//         activeIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], 0, 0.36)
+//           : scrollFunc(this.cards[movieIndex], -2, 0.4);
+//         break;
+//       case 3:
+//         activeIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], -18, 0.56)
+//           : scrollFunc(this.cards[movieIndex], -20, 0.6);
+//         break;
+//       case 4:
+//         activeIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], -36, 0.76)
+//           : scrollFunc(this.cards[movieIndex], -38, 0.8);
+//         break;
+//       case 5:
+//         activeIndex === this.cards.length - 1
+//           ? scrollFunc(this.cards[movieIndex], -54, 0.96)
+//           : scrollFunc(this.cards[movieIndex], -56, 1);
+//         break;
+//     }
+//   }
+// };
 
 /**
  * Shorthand function to navigate to a tab/section in the middle navigation (showtimes / details).
