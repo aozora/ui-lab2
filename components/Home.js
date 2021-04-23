@@ -91,7 +91,7 @@ const Home = () => {
   }, []);
 
   /**
-   * Set Movie cards animations
+   * Setup Movie cards animations
    */
   useEffect(() => {
     if (scroller.current) {
@@ -199,6 +199,7 @@ const Home = () => {
     if (movieIndex > activeIndex) {
       // Check index difference in forwards direction (right scrolling).
       const diff = movieIndex - activeIndex;
+
       // Adapt scrolling speed and offset to navigate between one or several movie cards.
       switch (diff) {
         case 1:
@@ -321,6 +322,7 @@ const Home = () => {
               </g>
             </svg>
           </button>
+
           <div className="big-movie-info">
             <div className="imdb">
               <div className="logo">IMDb</div>
@@ -378,12 +380,14 @@ const Home = () => {
                 </mask>
               </svg>
             </article>
+
             <section id="dual-wrapper">
               <article className="dual-screen left">
                 <div id="movie-copy">
                   <h4>Story</h4>
                   <p />
                 </div>
+
                 <div id="cast-wrap">
                   <h4>Cast</h4>
                   <article className="reel cast">
@@ -394,6 +398,7 @@ const Home = () => {
                         <p>copy</p>
                       </article>
                     </div>
+
                     <div className="item">
                       <div className="shot" />
                       <article className="details">
@@ -401,6 +406,7 @@ const Home = () => {
                         <p>copy</p>
                       </article>
                     </div>
+
                     <div className="item">
                       <div className="shot" />
                       <article className="details">
@@ -408,6 +414,7 @@ const Home = () => {
                         <p>copy</p>
                       </article>
                     </div>
+
                     <div className="item">
                       <div className="shot" />
                       <article className="details">
@@ -415,6 +422,7 @@ const Home = () => {
                         <p>copy</p>
                       </article>
                     </div>
+
                     <div className="item">
                       <div className="shot" />
                       <article className="details">
@@ -424,6 +432,7 @@ const Home = () => {
                     </div>
                   </article>
                 </div>
+
                 <div id="trailer-wrap">
                   <h4>Trailers</h4>
                   <article className="reel trailer">
@@ -436,6 +445,7 @@ const Home = () => {
                   </article>
                 </div>
               </article>
+
               <article className="dual-screen right">
                 <div id="date-picker">
                   <h4>Date</h4>
