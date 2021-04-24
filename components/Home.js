@@ -21,7 +21,7 @@ const Home = () => {
   const scroller = useRef();
   const navLayer = useRef();
   const progress = useRef(0);
-  const [activeIndex, setActiveIndex] = useState(null);
+  // const [activeIndex, setActiveIndex] = useState(null);
   const [trailerIndex, setTrailerIndex] = useState(null);
 
   /**
@@ -186,78 +186,88 @@ const Home = () => {
     return words[index];
   };
 
-  const navigateToSelectedMovie = tar => {
-    const target = tar;
-    // Index of active movie card.
-    // const activeIndex = cards.indexOf(document.querySelector('.movie-card.active'));
+  const navigateToSelectedMovie = target => {
+    if (typeof window !== 'undefined') {
+      // Index of the selected movie card
+      const movieIndex = movieData.findIndex(movie => movie.title === target);
+      let diff;
+      const cards = Array.from(document.querySelectorAll('.movie-card'));
+      // Index of active movie card.
+      const activeIndex = cards.indexOf(document.querySelector('.movie-card.active'));
 
-    // Index of the selected movie card
-    const movieIndex = movieData.findIndex(movie => movie.title === target);
-    let diff;
-    const cards = Array.from(document.querySelectorAll('.movie-card'));
+      if (movieIndex > activeIndex) {
+        // Check index difference in forwards direction (right scrolling).
+        diff = movieIndex - activeIndex;
 
-    if (movieIndex > activeIndex) {
-      // Check index difference in forwards direction (right scrolling).
-      const diff = movieIndex - activeIndex;
-
-      // Adapt scrolling speed and offset to navigate between one or several movie cards.
-      switch (diff) {
-        case 1:
-          movieIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], 0, 0.16)
-            : scrollFunc(cards[movieIndex], 54, 0.2);
-          break;
-        case 2:
-          movieIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], 0, 0.36)
-            : scrollFunc(cards[movieIndex], 72, 0.4);
-          break;
-        case 3:
-          movieIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], 0, 0.56)
-            : scrollFunc(cards[movieIndex], 90, 0.6);
-          break;
-        case 4:
-          movieIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], 0, 0.76)
-            : scrollFunc(cards[movieIndex], 108, 0.8);
-          break;
-        case 5:
-          movieIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], 0, 0.96)
-            : scrollFunc(cards[movieIndex], 126, 1);
-          break;
-      }
-    } else if (movieIndex < activeIndex) {
-      // Check index difference in backwards direction (left scrolling).
-      diff = activeIndex - movieIndex;
-      // Adapt scrolling speed and offset to navigate between one or several movie cards.
-      switch (diff) {
-        case 1:
-          activeIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], 18, 0.16)
-            : scrollFunc(cards[movieIndex], 16, 0.2);
-          break;
-        case 2:
-          activeIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], 0, 0.36)
-            : scrollFunc(cards[movieIndex], -2, 0.4);
-          break;
-        case 3:
-          activeIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], -18, 0.56)
-            : scrollFunc(cards[movieIndex], -20, 0.6);
-          break;
-        case 4:
-          activeIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], -36, 0.76)
-            : scrollFunc(cards[movieIndex], -38, 0.8);
-          break;
-        case 5:
-          activeIndex === cards.length - 1
-            ? scrollFunc(cards[movieIndex], -54, 0.96)
-            : scrollFunc(cards[movieIndex], -56, 1);
-          break;
+        // Adapt scrolling speed and offset to navigate between one or several movie cards.
+        switch (diff) {
+          case 1:
+            // eslint-disable-next-line no-unused-expressions
+            movieIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], 0, 0.16)
+              : scrollFunc(cards[movieIndex], 54, 0.2);
+            break;
+          case 2:
+            // eslint-disable-next-line no-unused-expressions
+            movieIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], 0, 0.36)
+              : scrollFunc(cards[movieIndex], 72, 0.4);
+            break;
+          case 3:
+            // eslint-disable-next-line no-unused-expressions
+            movieIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], 0, 0.56)
+              : scrollFunc(cards[movieIndex], 90, 0.6);
+            break;
+          case 4:
+            // eslint-disable-next-line no-unused-expressions
+            movieIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], 0, 0.76)
+              : scrollFunc(cards[movieIndex], 108, 0.8);
+            break;
+          case 5:
+            // eslint-disable-next-line no-unused-expressions
+            movieIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], 0, 0.96)
+              : scrollFunc(cards[movieIndex], 126, 1);
+            break;
+        }
+      } else if (movieIndex < activeIndex) {
+        // Check index difference in backwards direction (left scrolling).
+        diff = activeIndex - movieIndex;
+        // Adapt scrolling speed and offset to navigate between one or several movie cards.
+        switch (diff) {
+          case 1:
+            // eslint-disable-next-line no-unused-expressions
+            activeIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], 18, 0.16)
+              : scrollFunc(cards[movieIndex], 16, 0.2);
+            break;
+          case 2:
+            // eslint-disable-next-line no-unused-expressions
+            activeIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], 0, 0.36)
+              : scrollFunc(cards[movieIndex], -2, 0.4);
+            break;
+          case 3:
+            // eslint-disable-next-line no-unused-expressions
+            activeIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], -18, 0.56)
+              : scrollFunc(cards[movieIndex], -20, 0.6);
+            break;
+          case 4:
+            // eslint-disable-next-line no-unused-expressions
+            activeIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], -36, 0.76)
+              : scrollFunc(cards[movieIndex], -38, 0.8);
+            break;
+          case 5:
+            // eslint-disable-next-line no-unused-expressions
+            activeIndex === cards.length - 1
+              ? scrollFunc(cards[movieIndex], -54, 0.96)
+              : scrollFunc(cards[movieIndex], -56, 1);
+            break;
+        }
       }
     }
   };
