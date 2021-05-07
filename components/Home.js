@@ -6,8 +6,9 @@ import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import Footer from '@/components/Footer';
 import Search from '@/components/Search';
 import TopIcons from '@/components/TopIcons';
+import CardDetails from '@/components/CardDetails';
 import { movieData } from '../mock-data/moviesDataMock';
-import { scrollFunc } from '../utils';
+import { flipCard, scrollFunc } from '../utils';
 
 const labels = ['start', 'two', 'three', 'four', 'five', 'end'];
 
@@ -22,7 +23,7 @@ const Home = () => {
   const navLayer = useRef();
   const progress = useRef(0);
   const activeIndexRef = useRef(0);
-  const [trailerIndex, setTrailerIndex] = useState(null);
+  // const [trailerIndex, setTrailerIndex] = useState(null);
 
   /**
    * Create and pause the timeline for movie cards animation.
@@ -133,7 +134,9 @@ const Home = () => {
         }
       });
 
-      // Handles synchronisation of scrolling animation on resize.
+      /**
+       * Handles synchronisation of scrolling animation on resize.
+       */
       const refreshInit = () => {
         progress.current = trigger.progress;
       };
@@ -141,6 +144,7 @@ const Home = () => {
       const refresh = () => {
         trigger.scroll(progress.current * ScrollTrigger.maxScroll(scroller.current, true));
       };
+
       ScrollTrigger.addEventListener('refreshInit', refreshInit);
       ScrollTrigger.addEventListener('refresh', refresh);
 
@@ -156,6 +160,7 @@ const Home = () => {
           toggleClass: 'active',
           onToggle: ({ progress, direction, isActive }) => {
             if (isActive) {
+              // set the movie card active index to the card that trigger scrollTrigger
               activeIndexRef.current = cardIndex;
             }
           }
@@ -191,6 +196,10 @@ const Home = () => {
     return words[index];
   };
 
+  /**
+   * Scroll to the selected card
+   * @param target
+   */
   const navigateToSelectedMovie = target => {
     if (typeof window !== 'undefined') {
       // Index of the selected movie card
@@ -279,12 +288,52 @@ const Home = () => {
     }
   };
 
+  /**
+   * When a movie card is clicked
+   * @param e
+   * @param index
+   */
+  const onMovieCardSelected = (e, currentIndex) => {
+    // Disable hash redirection.
+    e.preventDefault();
+
+    // // Get index of active movie card inside its respective array.
+    // const activeIndex = this.cards.indexOf(document.querySelector('.movie-card.active'));
+    //
+    // // Get index of selected movie card.
+    // const currentIndex = this.links.indexOf(e.target);
+
+    const cards = Array.from(document.querySelectorAll('.movie-card'));
+    const infos = Array.from(document.querySelectorAll('.movie-info'));
+    const posters = Array.from(document.querySelectorAll('.movie-card .poster'));
+
+    // Handle forward navigation between movie cards (only one card every time).
+    if (currentIndex > activeIndexRef.current) {
+      // eslint-disable-next-line no-unused-expressions
+      currentIndex === movieData.length - 1
+        ? scrollFunc(cards[currentIndex], 0, 0.16)
+        : scrollFunc(cards[currentIndex], 54, 0.2);
+    } else if (currentIndex < activeIndexRef.current) {
+      scrollFunc(cards[currentIndex], 18, 0.2);
+    }
+
+    // Handle click on active movie card.
+    else if (currentIndex === activeIndexRef.current) {
+      // activeIndex = activeIndex;
+      flipCard(
+        posters[activeIndexRef.current],
+        infos[activeIndexRef.current],
+        activeIndexRef.current
+      );
+    }
+  };
+
   return (
     <section id="phone">
       <article id="screen">
         <header>
           <TopIcons />
-          <Search onNavigateToSelectedMovie={navigateToSelectedMovie()} />
+          <Search onNavigateToSelectedMovie={navigateToSelectedMovie} />
         </header>
 
         <main>
@@ -302,7 +351,7 @@ const Home = () => {
                   <h4 className="movie-title">{movie.title}</h4>
                   <article className="tags">{movie.tags}</article>
                 </article>
-                <a href="#" />
+                <a href="#" onClick={e => onMovieCardSelected(e, index)} />
               </div>
             ))}
 
@@ -313,166 +362,7 @@ const Home = () => {
         <Footer />
 
         {/* Second layer for expanded card with details, cast and trailer gallery */}
-        <article id="first-layer">
-          <div className="big-poster" />
-          <button type="button" className="close-card">
-            <svg viewBox="0 0 100 100">
-              <g transform="translate(0,-952.36218)">
-                <path
-                  d="m 50.000001,962.36216
-        c -22.10908,0 -40,17.88103 -40,40.00004 0,22.1085 17.8915,40 40,40 22.118968,0 39.999998,
-        -17.8909 39.999998,-40 0,-22.11959 -17.88046,-40.00004 -39.999998,-40.00004 z m -15.25,23
-        a 2.0002,2.0002 0 0 1 0.21875,0 2.0002,2.0002 0 0 1 1.4375,0.59375 l 13.59375,13.5625 13.562498,
-        -13.5625 a 2.0002,2.0002 0 0 1 1.375,-0.59375 2.0002,2.0002 0 0 1 1.46875,3.4375 l -13.593748,
-        13.59374 13.593748,13.5625 a 2.0108526,2.0108526 0 1 1 -2.84375,2.8438 l -13.562498,-13.5938
-        -13.59375,13.5938 a 2.0108526,2.0108526 0 0 1 -2.84375,-2.8438 l 13.5625,-13.5625 -13.5625,
-        -13.59374 a 2.0002,2.0002 0 0 1 1.1875,-3.4375 z"
-                  fill="#E6EBEF"
-                  fillOpacity="1"
-                  fillRule="evenodd"
-                  stroke="none"
-                  marker="none"
-                  visibility="visible"
-                  display="inline"
-                  overflow="visible"
-                />
-              </g>
-            </svg>
-          </button>
-
-          <div className="big-movie-info">
-            <div className="imdb">
-              <div className="logo">IMDb</div>
-              <div className="grade" />
-            </div>
-            <h4 className="movie-title" />
-            <article className="tags" />
-            <div className="info-last" />
-          </div>
-
-          <article id="bottom-screen">
-            <article id="mid-nav">
-              <a className="one" href="#">
-                SHOWTIMES
-              </a>
-              <a className="two" href="#">
-                DETAILS
-              </a>
-
-              <div id="nav-layer" ref={navLayer} />
-              <svg>
-                <rect
-                  id="text-bg"
-                  width="50%"
-                  height="100%"
-                  fill="#4c17ff"
-                  x="50%"
-                  y="0"
-                  rx="7"
-                  fillOpacity="1"
-                  mask="url(#knockout-text)"
-                />
-                <mask id="knockout-text">
-                  <rect width="100%" height="100%" fill="#fff" x="0" y="0" />
-                  <text
-                    x="25%"
-                    y="57.5%"
-                    fill="#000"
-                    fontSize="11px"
-                    fontWeight="700"
-                    textAnchor="middle"
-                  >
-                    SHOWTIMES
-                  </text>
-                  <text
-                    x="75%"
-                    y="57.5%"
-                    fill="#000"
-                    fontSize="11px"
-                    fontWeight="700"
-                    textAnchor="middle"
-                  >
-                    DETAILS
-                  </text>
-                </mask>
-              </svg>
-            </article>
-
-            <section id="dual-wrapper">
-              <article className="dual-screen left">
-                <div id="movie-copy">
-                  <h4>Story</h4>
-                  <p />
-                </div>
-
-                <div id="cast-wrap">
-                  <h4>Cast</h4>
-                  <article className="reel cast">
-                    <div className="item">
-                      <div className="shot" />
-                      <article className="details">
-                        <h5>copy</h5>
-                        <p>copy</p>
-                      </article>
-                    </div>
-
-                    <div className="item">
-                      <div className="shot" />
-                      <article className="details">
-                        <h5>copy</h5>
-                        <p>copy</p>
-                      </article>
-                    </div>
-
-                    <div className="item">
-                      <div className="shot" />
-                      <article className="details">
-                        <h5>copy</h5>
-                        <p>copy</p>
-                      </article>
-                    </div>
-
-                    <div className="item">
-                      <div className="shot" />
-                      <article className="details">
-                        <h5>copy</h5>
-                        <p>copy</p>
-                      </article>
-                    </div>
-
-                    <div className="item">
-                      <div className="shot" />
-                      <article className="details">
-                        <h5>copy</h5>
-                        <p>copy</p>
-                      </article>
-                    </div>
-                  </article>
-                </div>
-
-                <div id="trailer-wrap">
-                  <h4>Trailers</h4>
-                  <article className="reel trailer">
-                    <div className="item">
-                      <div className="video-thumb" />
-                    </div>
-                    <div className="item">
-                      <div className="video-thumb" />
-                    </div>
-                  </article>
-                </div>
-              </article>
-
-              <article className="dual-screen right">
-                <div id="date-picker">
-                  <h4>Date</h4>
-                  <article className="reel date" />
-                </div>
-                <div id="theaters-wrap" />
-              </article>
-            </section>
-          </article>
-        </article>
+        <CardDetails movie={movieData[activeIndexRef.current]} />
 
         <article id="fixed-layer" ref={fixedLayer}>
           <button type="button" ref={backArrow} className="back-arrow">

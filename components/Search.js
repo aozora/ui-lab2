@@ -1,29 +1,31 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { movieData } from '../mock-data/moviesDataMock';
 
 const Search = ({ onNavigateToSelectedMovie }) => {
+  const searchFieldRef = useRef();
   const dataList = useRef();
   const onFocus = () => gsap.set('#searchbar', { boxShadow: '0 0 0 1px var(--brand-c)' });
   const onBlur = () => gsap.set('#searchbar', { boxShadow: '' });
-  const onKeydown = e => {
-    if (e.keyCode === 13) {
-      // const target = this.searchField.value;
-      onNavigateToSelectedMovie(e.target.value);
-    }
+
+  const onSubmit = e => {
+    e.preventDefault();
+    const target = searchFieldRef.current.value;
+
+    onNavigateToSelectedMovie(target);
   };
 
   return (
     <article id="search">
-      <div id="searchbar">
+      <form onSubmit={onSubmit} noValidate id="searchbar">
         <input
+          ref={searchFieldRef}
           list="movies"
           placeholder="Search"
           onFocus={onFocus}
           onBlur={onBlur}
-          onKeyDown={onKeydown}
         />
-        <button type="button" id="search-icon">
+        <button type="submit" id="search-icon">
           <svg id="vector" viewBox="0 0 30.239 30.239">
             <g id="glass" fill="#B4BFFD">
               <path
@@ -36,7 +38,7 @@ const Search = ({ onNavigateToSelectedMovie }) => {
             </g>
           </svg>
         </button>
-      </div>
+      </form>
 
       <datalist id="movies" ref={dataList}>
         {movieData &&
