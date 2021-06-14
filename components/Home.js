@@ -8,7 +8,8 @@ import Search from '@/components/Search';
 import TopIcons from '@/components/TopIcons';
 import CardDetails from '@/components/CardDetails';
 import { movieData } from '../mock-data/moviesDataMock';
-import { flipCard, scrollFunc } from '../utils';
+import { scrollFunc } from '../utils';
+import { flipCard } from '../utils/flip';
 
 const labels = ['start', 'two', 'three', 'four', 'five', 'end'];
 
@@ -315,10 +316,8 @@ const Home = () => {
         : scrollFunc(cards[currentIndex], 54, 0.2);
     } else if (currentIndex < activeIndexRef.current) {
       scrollFunc(cards[currentIndex], 18, 0.2);
-    }
-
-    // Handle click on active movie card.
-    else if (currentIndex === activeIndexRef.current) {
+    } else if (currentIndex === activeIndexRef.current) {
+      // Handle click on active movie card.
       // activeIndex = activeIndex;
       flipCard(
         posters[activeIndexRef.current],
@@ -326,6 +325,12 @@ const Home = () => {
         activeIndexRef.current
       );
     }
+    // } else if (e.target.matches('.video-thumb')) {
+    //   this.trailerIndex = this.trailerItems.indexOf(e.target.parentElement);
+    //   this.expandTrailer(e.target, this.trailerIndex);
+    // } else if (e.target.matches('#fixed-layer .back-arrow')) {
+    //   this.closeTrailer(e.target, this.trailerIndex);
+    // }
   };
 
   return (

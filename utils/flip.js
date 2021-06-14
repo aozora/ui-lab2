@@ -1,6 +1,8 @@
+/* eslint-disable import/prefer-default-export */
 import gsap from 'gsap';
 import { Flip } from 'gsap/dist/Flip';
-import { fadeAll } from './index';
+import { fadeAll, fadeEl, switchOp } from './index';
+import { movieData } from '../mock-data/moviesDataMock';
 
 /**
  * Function to execute shared element transition to the vertical section with movie details.
@@ -24,7 +26,8 @@ export const flipCard = (el, el2, pos) => {
   // Hide original elements and show entering elements to see the transition to the next view (big).
   const cards = Array.from(document.querySelectorAll('.movie-card'));
   cards.forEach((card, i) => {
-    i === pos ? this.switchOp(card, 0) : this.fadeEl(card, 0, 0.2);
+    // eslint-disable-next-line no-unused-expressions
+    i === pos ? switchOp(card, 0) : fadeEl(card, 0, 0.2);
   });
 
   fadeAll('--layer-zero-opacity', '0');
@@ -46,6 +49,7 @@ export const flipCard = (el, el2, pos) => {
   gsap.set('.big-poster', {
     backgroundImage: `url(${movieData.pictures[pos]})`
   });
+
   // Animate now visible elements from 'small' state to 'big' state.
   Flip.from(bigState, {
     duration: 0.4,
