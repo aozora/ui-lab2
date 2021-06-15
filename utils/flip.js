@@ -47,7 +47,7 @@ export const flipCard = (el, el2, pos) => {
   gsap.set('.big-movie-info', { clearProps: true });
   // Show previously hidden big picture and set relevant background image with the active index.
   gsap.set('.big-poster', {
-    backgroundImage: `url(${movieData.pictures[pos]})`
+    backgroundImage: `url(${movieData[pos].picture})`
   });
 
   // Animate now visible elements from 'small' state to 'big' state.
@@ -61,7 +61,7 @@ export const flipCard = (el, el2, pos) => {
       // Enable pointer.
       gsap.set('#screen > #first-layer', { pointerEvents: 'all' });
       // Show close button to go back to the gallery view.
-      this.fadeEl('.close-card svg', 1, 0.1);
+      fadeEl('.close-card svg', 1, 0.1);
     }
   });
 
@@ -72,63 +72,70 @@ export const flipCard = (el, el2, pos) => {
   });
   // Reveal last line of primary info.
   setTimeout(() => {
-    this.fadeEl('.info-last', 1, 0.1);
+    fadeEl('.info-last', 1, 0.1);
   }, 0.2);
 };
 
-// export const flipBack = () => {
-//   // Reverse order of operations to apply the FLIP technique to go back to the first view.
-//   this.fadeEl('.close-card svg', 0, 0.1);
-//
-//   const picState = Flip.getState('.big-poster', {
-//     absolute: true,
-//     props: 'borderRadius,boxShadow'
-//   });
-//
-//   const subState = Flip.getState('.big-movie-info', { absolute: true });
-//
-//   setTimeout(() => {
-//     Flip.fit('.big-poster', this.posters[this.activeIndex], {
-//       absolute: true,
-//       props: 'borderRadius,boxShadow'
-//     });
-//     Flip.fit('.big-movie-info', this.infos[this.activeIndex], {
-//       absolute: true
-//     });
-//
-//     Flip.from(picState, {
-//       duration: 0.4,
-//       ease: 'power3.in',
-//       absolute: true,
-//       onComplete: () => {
-//         // Hide previous (big) elements (poster,info and bottom content) and show original elements.
-//         this.cards.forEach((card, i) => {
-//           i === this.activeIndex ? this.switchOp(card, 1) : this.fadeEl(card, 1, 0.2);
-//         });
-//         this.switchOp('.big-poster', 0);
-//         this.switchOp('.big-movie-info', 0);
-//         this.fadeAll('--layer-zero-opacity', '1');
-//         this.fadeAll('--layer-one-opacity', '0');
-//         // Disable pointer events.
-//         gsap.set('#screen > #first-layer', { pointerEvents: 'none' });
-//         // Reset scroll position of cast and trailer galleries.
-//         gsap.to('.dual-screen.left .reel', 0, {
-//           scrollTo: {
-//             x: 0
-//           }
-//         });
-//       }
-//     });
-//     Flip.from(subState, {
-//       duration: 0.4,
-//       ease: 'power3.in'
-//     });
-//     // Hide last line of primary info.
-//     setTimeout(() => {
-//       this.fadeEl('.info-last', 0, 0.1);
-//     }, 200);
-//   }, 100);
-// };
+export const flipBack = activeIndex => {
+  // Reverse order of operations to apply the FLIP technique to go back to the first view.
+  fadeEl('.close-card svg', 0, 0.1);
+
+  const picState = Flip.getState('.big-poster', {
+    absolute: true,
+    props: 'borderRadius,boxShadow'
+  });
+
+  const subState = Flip.getState('.big-movie-info', { absolute: true });
+  const posters = Array.from(document.querySelectorAll('.movie-card .poster'));
+  const infos = Array.from(document.querySelectorAll('.movie-info'));
+  const cards = Array.from(document.querySelectorAll('.movie-card'));
+
+  setTimeout(() => {
+    Flip.fit('.big-poster', posters[activeIndex], {
+      absolute: true,
+      props: 'borderRadius,boxShadow'
+    });
+
+    Flip.fit('.big-movie-info', infos[activeIndex], {
+      absolute: true
+    });
+
+    Flip.from(picState, {
+      duration: 0.4,
+      ease: 'power3.in',
+      absolute: true,
+      onComplete: () => {
+        // Hide previous (big) elements (poster,info and bottom content) and show original elements.
+        cards.forEach((card, i) => {
+          // eslint-disable-next-line no-unused-expressions
+          i === activeIndex ? switchOp(card, 1) : fadeEl(card, 1, 0.2);
+        });
+        switchOp('.big-poster', 0);
+        switchOp('.big-movie-info', 0);
+        fadeAll('--layer-zero-opacity', '1');
+        fadeAll('--layer-one-opacity', '0');
+        // Disable pointer events.
+        gsap.set('#screen > #first-layer', { pointerEvents: 'none' });
+        // Reset scroll position of cast and trailer galleries.
+        gsap.to('.dual-screen.left .reel', 0, {
+          scrollTo: {
+            x: 0
+          }
+        });
+      }
+    });
+
+    Flip.from(subState, {
+      duration: 0.4,
+      ease: 'power3.in'
+    });
+
+    // Hide last line of primary info.
+    setTimeout(() => {
+      fadeEl('.info-last', 0, 0.1);
+    }, 200);
+  }, 100);
+};
 
 /**
  * Expand trailer thumbnail to full-screen loaded video on click

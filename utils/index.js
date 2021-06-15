@@ -60,7 +60,7 @@ export const scrollFunc = (pos, off, dur) => {
  * @param val
  */
 export const fadeAll = (prop, val) => {
-  this.cssBody.setProperty(prop, val);
+  document.body.style.setProperty(prop, val);
 };
 
 /**
@@ -306,27 +306,28 @@ export const handleClicks = () => {
       //   this.inputNav(target);
       // }
       // Handles click of close button (detailed view).
-      if (e.target.matches('.close-card')) {
-        if (document.querySelector('#first-layer').scrollTop !== 0) {
-          gsap.to('#first-layer', 0.2, {
-            scrollTo: {
-              y: 0
-            },
-            onComplete: () => {
-              dynamicScroll.flipBack();
-            }
-          });
-        } else {
-          dynamicScroll.flipBack();
-        }
-      }
+      // if (e.target.matches('.close-card')) {
+      //   if (document.querySelector('#first-layer').scrollTop !== 0) {
+      //     gsap.to('#first-layer', 0.2, {
+      //       scrollTo: {
+      //         y: 0
+      //       },
+      //       onComplete: () => {
+      //         dynamicScroll.flipBack();
+      //       }
+      //     });
+      //   } else {
+      //     dynamicScroll.flipBack();
+      //   }
+      // }
       // // Handles click on middle navigation tab buttons.
       // else if (e.target.matches('#mid-nav a')) {
       //   const index = this.midNavLinks.indexOf(e.target);
       //   this.toggleMidNav(index);
       // }
       // Handles click on movie cards (links).
-      else if (e.target.matches('.movie-card a')) {
+      // else
+      if (e.target.matches('.movie-card a')) {
         // Disable hash redirection.
         e.preventDefault();
         // Get index of active movie card inside its respective array.

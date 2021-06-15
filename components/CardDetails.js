@@ -1,15 +1,32 @@
 import React from 'react';
+import gsap from 'gsap';
+import { flipBack } from '../utils/flip';
 
 /**
  * Second layer for expanded card with details, cast and trailer gallery
  * @returns {JSX.Element}
  * @constructor
  */
-const CardDetails = ({ grade, title, tags, secInfo, synops, cast, trailPics, trail }) => {
+const CardDetails = ({ activeIndex, movie, nav }) => {
+  const closeCard = () => {
+    if (document.querySelector('#first-layer').scrollTop !== 0) {
+      gsap.to('#first-layer', 0.2, {
+        scrollTo: {
+          y: 0
+        },
+        onComplete: () => {
+          flipBack(activeIndex);
+        }
+      });
+    } else {
+      flipBack(activeIndex);
+    }
+  };
+
   return (
     <article id="first-layer">
       <div className="big-poster" />
-      <button type="button" className="close-card">
+      <button type="button" className="close-card" onClick={closeCard}>
         <svg viewBox="0 0 100 100">
           <g transform="translate(0,-952.36218)">
             <path
@@ -37,11 +54,11 @@ const CardDetails = ({ grade, title, tags, secInfo, synops, cast, trailPics, tra
       <div className="big-movie-info">
         <div className="imdb">
           <div className="logo">IMDb</div>
-          <div className="grade">{grade}</div>
+          <div className="grade">{movie.grade}</div>
         </div>
-        <h4 className="movie-title">{title}</h4>
-        <article className="tags">{tags}</article>
-        <div className="info-last">{secInfo}</div>
+        <h4 className="movie-title">{movie.title}</h4>
+        <article className="tags">{movie.tags}</article>
+        <div className="info-last">{movie.secInfo}</div>
       </div>
 
       <article id="bottom-screen">
@@ -53,7 +70,7 @@ const CardDetails = ({ grade, title, tags, secInfo, synops, cast, trailPics, tra
             DETAILS
           </a>
 
-          <div id="nav-layer" ref={navLayer} />
+          <div id="nav-layer" ref={nav} />
           <svg>
             <rect
               id="text-bg"
@@ -96,14 +113,14 @@ const CardDetails = ({ grade, title, tags, secInfo, synops, cast, trailPics, tra
           <article className="dual-screen left">
             <div id="movie-copy">
               <h4>Story</h4>
-              <p>{synops}</p>
+              <p>{movie.synops}</p>
             </div>
 
             <div id="cast-wrap">
               <h4>Cast</h4>
               <article className="reel cast">
-                {cast &&
-                  cast.map(castItem => (
+                {movie.cast &&
+                  movie.cast.map(castItem => (
                     <div className="item" key={castItem.name}>
                       <div className="shot" style={{ backgroundImage: `url(${castItem.src})` }} />
                       <article className="details">
@@ -118,8 +135,8 @@ const CardDetails = ({ grade, title, tags, secInfo, synops, cast, trailPics, tra
             <div id="trailer-wrap">
               <h4>Trailers</h4>
               <article className="reel trailer">
-                {trail &&
-                  trail.map(trailer => (
+                {movie.trail &&
+                  movie.trail.map(trailer => (
                     <div className="item" key={trailer}>
                       <div className="video-thumb" style={{ backgroundImage: `url(${trailer})` }} />
                     </div>

@@ -367,7 +367,11 @@ const Home = () => {
         <Footer />
 
         {/* Second layer for expanded card with details, cast and trailer gallery */}
-        <CardDetails movie={movieData[activeIndexRef.current]} />
+        <CardDetails
+          activeIndex={activeIndexRef.current}
+          movie={movieData[activeIndexRef.current]}
+          nav={navLayer}
+        />
 
         <article id="fixed-layer" ref={fixedLayer}>
           <button type="button" ref={backArrow} className="back-arrow">
